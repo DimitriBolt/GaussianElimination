@@ -114,10 +114,7 @@ def lu(A, use_c=False):
 
 
 def plu(A, use_c=False):
-    if use_c:
-        return plu_c(A)
-    else:
-        return lu_python(A)
+    return plu_c(A)
 
 
 if __name__ == "__main__":
