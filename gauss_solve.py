@@ -85,7 +85,7 @@ def plu_c(A):
                 [0, 1, 0]]
      
     # Extract L and U parts from A, fill with 0's and 1's
-    return p_matrix, unpack(modified_array_2d)
+    return p_matrix, *unpack(modified_array_2d)
 
 
 def lu_python(A):
@@ -137,5 +137,5 @@ if __name__ == "__main__":
     print(L)
     print(U)
 
-    use_c = True;
+    use_c = True
     P, L, U = plu(A, use_c = use_c)
