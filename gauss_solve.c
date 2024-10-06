@@ -8,6 +8,10 @@
 *
 *----------------------------------------------------------------*/
 #include "gauss_solve.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+
 
 void gauss_solve_in_place(const int n, double A[n][n], double b[n])
 {
@@ -67,4 +71,100 @@ void lu_in_place_reconstruct(int n, double A[n][n])
   }
 }
 
-void plu(int n, double A[n][n], int P[n]){}
+
+void plu(int n, double A[n][n], int P[n]) {
+    int i, j, k, maxIndex;
+    double maxVal, temp;
+    double L[n][n], U[n][n];
+
+    // Initialize permutation matrix P to the identity permutation
+    for (i = 0; i < n; i++) {
+        P[i] = i;
+    }
+
+    // Initialize L to zero and copy A into U
+    for (i = 0; i < n; i++) {
+        for (j = 0; j < n; j++) {
+            L[i][j] = 0.0;
+            U[i][j] = A[i][j];
+        }
+    }
+
+    // Perform PA=LU decomposition with partial pivoting
+    for (k = 0; k < n - 1; k++) {
+        // Find the pivot row
+        maxIndex = k;
+        maxVal = fabs(U[k][k]);
+        for (i = k + 1; i < n; i++) {
+            if (fabs(U[i][k]) > maxVal) {
+                maxVal = fabs(U[i][k]);
+                maxIndex = i;
+            }
+        }
+
+        // Swap rows in U and adjust the permutation matrix P
+        if (maxIndex != k) {
+            for (j = 0; j < n; j++) {
+                temp = U[k][j];
+                U[k][j] = U[maxIndex][j];
+                U[maxIndex][j] = temp;
+            }
+            int tempP = P[k];
+            P[k] = P[maxIndex];
+            P[maxIndex] = tempP;
+
+            // Swap rows in L for columns < k
+            for (j = 0; j < k; j++) {
+                temp = L[k][j];
+                L[k][j] = L[maxIndex][j];
+                L[maxIndex][j] = temp;
+            }
+        }
+
+        // Compute the multipliers and eliminate entries below the pivot
+        for (i = k + 1; i < n; i++) {
+            L[i][k] = U[i][k] / U[k][k];
+            for (j = k; j < n; j++) {
+                U[i][j] -= L[i][k] * U[k][j];
+            }
+        }
+    }
+    for (i = 0; i<n; i++){
+      for (j=0; j<n; j++){
+        if (j>=i){
+          A[i][j] = U[i][j];
+        } else {
+          A[i][j] = L[i][j];
+          }
+      }
+    }
+
+
+    // Set the diagonal elements of L to 1
+    for (i = 0; i < n; i++) {
+        L[i][i] = 1.0;
+    }
+
+    // Output matrices P, L, and U for verification (optional)
+    printf("Permutation vector P:\n");
+    for (i = 0; i < n; i++) {
+        printf("%d ", P[i]);
+    }
+    printf("\n");
+
+    printf("Matrix L:\n");
+    for (i = 0; i < n; i++) {
+        for (j = 0; j < n; j++) {
+            printf("%0.2f ", L[i][j]);
+        }
+        printf("\n");
+    }
+
+    printf("Matrix U:\n");
+    for (i = 0; i < n; i++) {
+        for (j = 0; j < n; j++) {
+            printf("%0.2f ", U[i][j]);
+        }
+        printf("\n");
+    }
+}
