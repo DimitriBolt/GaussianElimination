@@ -66,3 +66,5 @@ void lu_in_place_reconstruct(int n, double A[n][n])
     }
   }
 }
+
+void plu(int n, double A[n][n], int P[n]){}

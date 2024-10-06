@@ -27,5 +27,6 @@
 void gauss_solve_in_place(const int n, double A[n][n], double b[n]);
 void lu_in_place(const int n, double A[n][n]);
 void lu_in_place_reconstruct(int n, double A[n][n]);
+void plu(int n, double A[n][n], int P[n]);
 
 #endif
